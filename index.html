@@ -1,0 +1,133 @@
+<html>
+<script>
+    //随机dapp 修改需要促活的dapp
+    var dapps = ["jedi", "avnu", "10k", "sith", "zklend","myswap","fibrous","carmine","nostra","carmine","nostra"];
+    
+    function generate(){
+        var number=document.getElementById("input_number").value;//获取账号数量
+        var day=document.getElementById("input_day").value;//获取生成天数
+      
+        generateTable(number,day);
+
+    }
+   
+    function generateTable(n,d) {
+    // 创建一个包含数字1到n的数组
+  let numbers = Array.from({ length: n }, (_, i) => i + 1);
+
+// 随机打乱数组顺序
+for (let i = numbers.length - 1; i > 0; i--) {
+  const j = Math.floor(Math.random() * (i + 1));
+  [numbers[i], numbers[j]] = [numbers[j], numbers[i]];
+}
+
+// 计算每个数组应该包含的元素数量
+var avgCount = 0//Math.floor(n / d);
+var plusCount=0
+if (n%d===0){
+    avgCount=n/d
+} else {
+    avgCount=Math.floor(n/d)
+    plusCount=n%d
+
+}
+// 将数字分配到数组中
+let arrays = [];
+
+for (let i = 0; i < n; ) {
+    if(plusCount==0){
+        arrays.push(numbers.slice(i, i + avgCount));
+        i += avgCount
+    } else {
+        arrays.push(numbers.slice(i, i + avgCount+1));
+        i += avgCount+1
+        plusCount=plusCount-1
+    }
+}
+// let table = document.createElement("table");
+
+let table = document.getElementById("my-table");
+
+  
+   // 表头行
+   let theadRow = document.createElement("tr");
+   let theadCell = document.createElement("th");
+//    theadCell.textContent = " ";
+//    theadRow.appendChild(theadCell);
+   
+   for (let i = 0; i < arrays.length; i++) {
+     theadCell = document.createElement("th");
+     theadCell.textContent = `第 ${i + 1} 天`;
+     theadRow.appendChild(theadCell);
+   }
+   
+   table.appendChild(theadRow);
+
+   
+   // 数字行
+   for (let j = 0; j < arrays[0].length; j++) {
+     let tr = document.createElement("tr");
+     let td = document.createElement("td");
+    //  td.textContent = ``;
+    //  tr.appendChild(td);
+
+     arrays.forEach((arr) => {
+       td = document.createElement("td");
+       if (arr[j] == undefined) {
+        td.textContent =  "";
+       } else {
+        // 生成一个随机索引
+        var randomIndex = Math.floor(Math.random() * dapps.length);
+
+        // 根据随机索引取出对应的元素
+        var randomValue = dapps[randomIndex];
+        td.textContent = "账号"+arr[j]+"-"+randomValue
+       }
+       tr.appendChild(td);
+     });
+
+     table.appendChild(tr);
+   }
+
+   // 将表格添加到页面中
+   document.body.appendChild(table);
+}
+
+
+</script>
+<style>
+    .my-table {
+        border-collapse: collapse;
+        width: 100%;
+    }
+    
+    .my-table th, .my-table td {
+        border: 1px solid #ccc;
+        padding: 8px;
+        text-align: left;
+    }
+    
+    .my-table th {
+        background-color: #f2f2f2;
+        font-weight: bold;
+    }
+    
+    .my-table tr:nth-child(even) {
+        background-color: #f9f9f9;
+    }
+</style>
+
+
+<html>
+ <div>
+  账号数量:<input type="text" id="input_number"><br>
+  生成天数:<input type="text" id="input_day"><br>
+
+  <input type="button" value="随机生成" onclick="generate()"><br/>
+ </div>
+  <div id="container">
+    <table class="my-table" id="my-table">
+
+    </table>
+  </div>
+</html>
